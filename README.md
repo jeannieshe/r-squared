@@ -2,6 +2,7 @@
 This codebase implements RL combination perturbation discovery that uses a learned world model (such as ReJam) in order to find optimal combo perturbations for a given transcriptome.
 
 ## Repository Structure
+```
 r-squared/
 ├── configs/                  # YAML/Hydra configuration files for hyperparams
 │   ├── default.yaml
@@ -12,7 +13,7 @@ r-squared/
 │   ├── __init__.py
 │   └── custom_env.py
 ├── src/
-    ├── data/                 
+│   ├── data/                 
 │   │   ├── gdsc.py           # GDSC^2 dataset
 │   │   └── splits.py         # frozen hidden-pair split
 │   ├── agents/               # Policy, value networks, or custom agent classes
@@ -20,6 +21,7 @@ r-squared/
 │   │   └── ppo_agent.py
 │   ├── algorithms/           # Core RL training loops (or clean/modular updates)
 │   │   ├── __init__.py
+│   │   ├── baselines.py
 │   │   └── ppo.py
 │   └── utils/                # Replay buffers, normalization, logging hooks
 │       ├── buffer.py
@@ -31,3 +33,4 @@ r-squared/
 ├── results/                  # Local artifacts (git-ignored)
 ├── requirements.txt or pyproject.toml
 └── README.md
+```
