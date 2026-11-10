@@ -1,3 +1,6 @@
+## Overview
+This codebase implements RL combination perturbation discovery that uses a learned world model (such as ReJam) in order to find optimal combo perturbations for a given transcriptome.
+
 ## Repository Structure
 r-squared/
 ├── configs/                  # YAML/Hydra configuration files for hyperparams
