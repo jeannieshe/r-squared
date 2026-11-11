@@ -1,9 +1,11 @@
-experiments/*
 results/*
-src/data/raw/*
+data/raw/*
 
 *.DS_Store
 
 *.ckpt
 
 src/*.egg-info/
+
+*/__pycache__/*
+*/__marimo__/*

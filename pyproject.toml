@@ -9,7 +9,10 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "marimo>=0.25.2",
+    "pandas>=3.1.1",
     "pre-commit>=4.7.0",
+    "pyarrow>=26.0.1",
 ]
 
 [tool.ruff]
