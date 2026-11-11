@@ -724,6 +724,7 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "marimo" },
+    { name = "numpy" },
     { name = "pandas" },
     { name = "pre-commit" },
     { name = "pyarrow" },
@@ -733,6 +734,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "marimo", specifier = ">=0.25.2" },
+    { name = "numpy", specifier = ">=2.5.4" },
     { name = "pandas", specifier = ">=3.1.1" },
     { name = "pre-commit", specifier = ">=4.7.0" },
     { name = "pyarrow", specifier = ">=26.0.1" },
