@@ -4,6 +4,9 @@ This codebase implements RL combination perturbation discovery that uses a learn
 ## Repository Structure
 ```
 r-squared/
+├── data/
+│   ├── gdsc.py               # GDSC^2 dataset
+│   └── splits.py             # frozen hidden-pair split
 ├── configs/                  # YAML/Hydra configuration files for hyperparams
 │   ├── default.yaml
 │   └── algos/
@@ -13,9 +16,6 @@ r-squared/
 │   ├── __init__.py
 │   └── custom_env.py
 ├── src/
-│   ├── data/                 
-│   │   ├── gdsc.py           # GDSC^2 dataset
-│   │   └── splits.py         # frozen hidden-pair split
 │   ├── agents/               # Policy, value networks, or custom agent classes
 │   │   ├── __init__.py
 │   │   └── ppo_agent.py
@@ -29,8 +29,11 @@ r-squared/
 ├── scripts/                  # Entry points
 │   ├── train.py
 │   └── evaluate.py
-├── experiments/              # Local experiment checkpoints (git-ignored)
+├── experiments/              # Local experiment scripts
 ├── results/                  # Local artifacts (git-ignored)
-├── requirements.txt or pyproject.toml
+├── pyproject.toml
+├── uv.lock
+├── .gitignore
+├── .pre-commit-config.yaml
 └── README.md
 ```
