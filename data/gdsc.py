@@ -47,7 +47,7 @@ def load_gdsc2(raw_dir: Path) -> pd.DataFrame:
 
 def aggregate_replicates(df: pd.DataFrame) -> pd.DataFrame:
     """Mean response per (cell line, pair), with replicate count and spread."""
-    return df.groupby(["CELL_LINE", "PAIR"], as_index=False).agg(
+    return df.groupby(["CELL_LINE", "PAIR", "TISSUE", "DRUG1", "DRUG2"], as_index=False).agg(
         COMBO_MaxE=("COMBO_MaxE", "mean"),
         BLISS=("BLISS", "mean"),
         HSA=("HSA", "mean"),

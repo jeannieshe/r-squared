@@ -1,0 +1,12 @@
+defaults:
+  - task    # loads configs/task.yaml: response, target, budget, seeds
+  - _self_  # then the rest of run.yaml: policy, wandb, hydra
+
+policy: random
+wandb:
+  entity: goodarzilab
+  project: r-squared
+
+hydra:
+  run:
+    dir: results/${now:%Y-%m-%d}/${now:%H-%M-%S}_${policy}
