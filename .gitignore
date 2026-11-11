@@ -7,7 +7,7 @@ data/raw/*
 
 src/*.egg-info/
 
-*/__pycache__/*
+**/__pycache__/
 */__marimo__/*
 
 wandb/*

@@ -15,13 +15,15 @@ r-squared/
 ├── envs/                     # Custom Gym/Gymnasium environments or wrappers
 │   ├── __init__.py
 │   └── custom_env.py
+├── policies/
+│   │   ├── base.py
+│   │   ├── baselines.py      # Random, Greedy, UCB, Thompson
 ├── src/
 │   ├── agents/               # Policy, value networks, or custom agent classes
 │   │   ├── __init__.py
 │   │   └── ppo_agent.py
 │   ├── algorithms/           # Core RL training loops (or clean/modular updates)
 │   │   ├── __init__.py
-│   │   ├── baselines.py
 │   │   └── ppo.py
 │   └── utils/                # Replay buffers, normalization, logging hooks
 │       ├── buffer.py

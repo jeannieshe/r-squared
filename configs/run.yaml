@@ -1,12 +1,12 @@
 defaults:
   - task    # loads configs/task.yaml: response, target, budget, seeds
-  - _self_  # then the rest of run.yaml: policy, wandb, hydra
+  - policy: random  # loads configs/policy/<name>.yaml; override with policy=ucb policy.beta=2.0
+  - _self_  # then the rest of run.yaml: wandb, hydra
 
-policy: random
 wandb:
   entity: goodarzilab
   project: r-squared
 
 hydra:
   run:
-    dir: results/${now:%Y-%m-%d}/${now:%H-%M-%S}_${policy}
+    dir: results/${now:%Y-%m-%d}/${now:%H-%M-%S}_${policy.name}

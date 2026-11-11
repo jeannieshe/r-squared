@@ -11,10 +11,9 @@ from omegaconf import DictConfig, OmegaConf
 
 from envs.search_env import SearchEnv
 from envs.task import Task, make_task
-from src.policies.baselines import RandomPolicy
+from src.policies.baselines import make_policy
 
 ROOT = Path(__file__).resolve().parents[1]
-POLICIES = {"random": RandomPolicy}
 
 
 def run_episode(task: Task, policy, rng: np.random.Generator) -> list[float]:
@@ -32,21 +31,23 @@ def main(cfg: DictConfig) -> None:
     combos = pd.read_parquet(ROOT / "data/processed/gdsc2_combos.parquet")
     hidden = yaml.safe_load((ROOT / "configs/split.yaml").read_text())["hidden_pairs"]
     task = make_task(combos, hidden, cfg)
-    policy = POLICIES[cfg.policy]()
+    policy_kwargs = OmegaConf.to_container(cfg.policy, resolve=True)
+    name = policy_kwargs.pop("name")
+    policy = make_policy(name, **policy_kwargs)
 
     rows = []
     for seed in cfg.seeds:
         with wandb.init(
             entity=cfg.wandb.entity,
             project=cfg.wandb.project,
-            group=cfg.policy,
-            name=f"{cfg.policy}-seed{seed}",
+            group=name,
+            name=f"{name}-seed{seed}",
             config={**OmegaConf.to_container(cfg, resolve=True), "seed": seed},
         ) as run:
             curve = run_episode(task, policy, np.random.default_rng(seed))
             for rnd, recall in enumerate(curve, start=1):
                 run.log({"recall": recall, "n_tested": rnd * task.batch_size}, step=rnd)
-                rows.append({"policy": cfg.policy, "seed": seed, "round": rnd, "recall": recall})
+                rows.append({"policy": name, "seed": seed, "round": rnd, "recall": recall})
             run.summary["final_recall"] = curve[-1]
 
     out = Path(HydraConfig.get().runtime.output_dir)
