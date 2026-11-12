@@ -11,17 +11,22 @@ from omegaconf import DictConfig, OmegaConf
 
 from envs.search_env import SearchEnv
 from envs.task import Task, make_task
+from src.models.mlp import MLPEnsemble
 from src.policies.baselines import make_policy
 
 ROOT = Path(__file__).resolve().parents[1]
+MODELS = {"mlp": MLPEnsemble}
 
-
-def run_episode(task: Task, policy, rng: np.random.Generator) -> list[float]:
+def run_episode(task: Task, policy, model, response, rng: np.random.Generator) -> list[float]:
     """Spend the whole budget; return recall after each round."""
     env = SearchEnv(task)
     curve = []
     while not env.done:
-        env.step(policy.select(None, None, ~env.observed, task.batch_size, rng))
+        mean = std = None
+        if model is not None:
+            mean, std = model.fit(task.train, env.revealed(response)).predict(task.pool)
+
+        env.step(policy.select(mean, std, ~env.observed, task.batch_size, rng))
         curve.append(env.recall())
     return curve
 
@@ -37,17 +42,22 @@ def main(cfg: DictConfig) -> None:
 
     rows = []
     for seed in cfg.seeds:
+        model_kwargs = OmegaConf.to_container(cfg.model, resolve=True)
+        model_name = model_kwargs.pop("name")
+
+        model = MODELS[model_name](cfg.response, seed=seed, **model_kwargs) if model_name else None
+
         with wandb.init(
             entity=cfg.wandb.entity,
             project=cfg.wandb.project,
-            group=name,
-            name=f"{name}-seed{seed}",
+            group=f"{name}+{model_name}",
+            name=f"{name}+{model_name}-seed{seed}",
             config={**OmegaConf.to_container(cfg, resolve=True), "seed": seed},
         ) as run:
-            curve = run_episode(task, policy, np.random.default_rng(seed))
+            curve = run_episode(task, policy, model, cfg.response, np.random.default_rng(seed))
             for rnd, recall in enumerate(curve, start=1):
                 run.log({"recall": recall, "n_tested": rnd * task.batch_size}, step=rnd)
-                rows.append({"policy": name, "seed": seed, "round": rnd, "recall": recall})
+                rows.append({"policy": name, "model": model_name, "seed": seed, "round": rnd, "recall": recall})
             run.summary["final_recall"] = curve[-1]
 
     out = Path(HydraConfig.get().runtime.output_dir)

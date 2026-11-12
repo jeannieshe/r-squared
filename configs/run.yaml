@@ -1,6 +1,7 @@
 defaults:
   - task    # loads configs/task.yaml: response, target, budget, seeds
   - policy: random  # loads configs/policy/<name>.yaml; override with policy=ucb policy.beta=2.0
+  - model: none # loads configs/model/none.yaml
   - _self_  # then the rest of run.yaml: wandb, hydra
 
 wandb:
@@ -10,3 +11,6 @@ wandb:
 hydra:
   run:
     dir: results/${now:%Y-%m-%d}/${now:%H-%M-%S}_${policy.name}
+  sweep:
+    dir: results/${now:%Y-%m-%d}/${now:%H-%M-%S}_sweep
+    subdir: ${policy.name}+${model.name}

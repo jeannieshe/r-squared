@@ -1,0 +1,5 @@
+name: mlp
+n_models: 5
+revealed_frac: 0.3
+epochs: 20
+device: cuda
